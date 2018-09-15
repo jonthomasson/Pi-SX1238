@@ -12,6 +12,7 @@ reset_pin = 4 #reset pin
 ce_pin = 5 #spi ce pin
 irq_pin = 6 #irq pin
 node_address = 7 #node address
+mode = 0
 
 #setup gpio
 GPIO.setmode(GPIO.BOARD)
@@ -41,6 +42,12 @@ def init():
     GPIO.output(rxen_pin, GPIO.LOW)
     time.sleep(.1)
 
+    #init registers
+    set_mode(5) #start out in rx mode
+
+    write_register(0x40, 0) #DIO0 is "payload ready"
+
+
 def init_spi():
     bus = 0 #default spi bus
 
@@ -68,10 +75,39 @@ def write_register(addr, value):
     spi.xfer2(value) 
     
 
+def set_mode(newMode):
+
+    if newMode == mode:
+        return
+
+    rcv = 0
+    regVal = newMode | 0x08
+    write_register(0x01, regVal) #update the opmode register with the new mode
+
+    while(rcv & 0x80) == 0x00: #wait for modeready
+        rcv = read_register(0x3E) #check irqflags1
+
+    mode = newMode
+
+    if newMode == 3: #if transmit
+        GPIO.output(rxen_pin, GPIO.LOW)
+        GPIO.output(mode_pin, GPIO.LOW)
+        GPIO.output(txen_pin, GPIO.HIGH)
+    elif newMode == 5: #if receive
+        GPIO.output(rxen_pin, GPIO.HIGH)
+        GPIO.output(mode_pin, GPIO.LOW)
+        GPIO.output(txen_pin, GPIO.LOW)
+    elif newMode == 0: #if sleep
+        GPIO.output(rxen_pin, GPIO.LOW)
+        GPIO.output(mode_pin, GPIO.LOW)
+        GPIO.output(txen_pin, GPIO.LOW)
+    elif newMode == 1: #if standby
+        GPIO.output(rxen_pin, GPIO.LOW)
+        GPIO.output(mode_pin, GPIO.LOW)
+        GPIO.output(txen_pin, GPIO.LOW)
 
 
-
-
+    
 
 
 
