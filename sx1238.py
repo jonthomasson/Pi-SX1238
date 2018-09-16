@@ -43,6 +43,25 @@ def init():
     time.sleep(.1)
 
     #init registers
+    write_register(0x09, 0) #reg paconfig = set transmit power to 0
+    write_register(0x35, 0x8f) #reg fifothresh = fifo start condition not empty
+    write_register(0x30, 0x80) #reg packetconfig1 = turn off crc
+    write_register(0x31, 0x40) #reg packetconfig2 = packet mode
+    write_register(0x25, 0x00) #reg preamblemsb = preamble length
+    write_register(0x26, 0x03) #reg preamblelsb = preamble length
+    write_register(0x06, 0xe4) #reg frfmsb = frequency 915MHz
+    write_register(0x07, 0xc0) #reg frfmid = frequency 915MHz
+    write_register(0x08, 0x00) #reg frflsb = frequency 915MHz
+    write_register(0x27, 0x91) #reg syncconfig =  auto restart, sync on, fill auto, sync size 2 bytes
+    write_register(0x28, 0x5a) #reg syncvalue1
+    write_register(0x29, 0x5a) #reg syncvalue2
+    write_register(0x02, 0x1a) #reg bitratemsb
+    write_register(0x03, 0x0b) #reg bitratelsb
+    write_register(0x04, 0x00) #reg fdevmsb = (deviation in Hz = fdev * 61)
+    write_register(0x05, 0x52) #reg fdevlsb = see datasheet for max fdev limits (https://www.semtech.com/uploads/documents/sx1238.pdf page 22)
+    write_register(0x12, 0x05) #reg rxbw
+    write_register(0x33, node_address) #reg rxnodeadrs = set node address
+
     set_mode(5) #start out in rx mode
 
     write_register(0x40, 0) #DIO0 is "payload ready"
