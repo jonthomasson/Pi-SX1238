@@ -18,3 +18,5 @@ sx1238.write_register(0x33, 10) #write register regnodeadrs
 regval = sx1238.read_register(0x33) #read regnodeadrs
 
 print("reg node address = ", regval)
+
+sx1238.destroy()

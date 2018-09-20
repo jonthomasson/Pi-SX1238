@@ -5,22 +5,22 @@ import RPi.GPIO as GPIO
 import spidev
 import time
 
-rxen_pin = 1 #rxen pin
-mode_pin = 2 #mode pin
-txen_pin = 3 #txen pin
-reset_pin = 4 #reset pin
-ce_pin = 5 #spi ce pin
-irq_pin = 6 #irq pin
+rxen_pin = 29 #rxen pin
+mode_pin = 31 #mode pin
+txen_pin = 33 #txen pin
+reset_pin = 35 #reset pin
+ce_pin = 1 #spi ce pin
+irq_pin = 37 #irq pin
 node_address = 7 #node address
 mode = 0
 
 #setup gpio
-GPIO.setmode(GPIO.BOARD)
-GPIO.setup(rxen_pin, GPIO.OUT)
-GPIO.setup(mode_pin, GPIO.OUT)
-GPIO.setup(txen_pin, GPIO.OUT)
-GPIO.setup(reset_pin, GPIO.OUT)
-GPIO.setup(ce_pin, GPIO.OUT)
+#GPIO.setmode(GPIO.BOARD)
+#GPIO.setup(rxen_pin, GPIO.OUT)
+#GPIO.setup(mode_pin, GPIO.OUT)
+#GPIO.setup(txen_pin, GPIO.OUT)
+#GPIO.setup(reset_pin, GPIO.OUT)
+
 
 # Enable SPI
 spi = spidev.SpiDev()
@@ -28,6 +28,8 @@ spi = spidev.SpiDev()
 def init():
     #setup spi
     init_spi()
+
+    return
 
     #disable mode pins of trx
     GPIO.output(rxen_pin, GPIO.LOW)
@@ -42,6 +44,7 @@ def init():
     GPIO.output(rxen_pin, GPIO.LOW)
     time.sleep(.1)
 
+    
     #init registers
     write_register(0x09, 0) #reg paconfig = set transmit power to 0
     write_register(0x35, 0x8f) #reg fifothresh = fifo start condition not empty
@@ -62,36 +65,41 @@ def init():
     write_register(0x12, 0x05) #reg rxbw
     write_register(0x33, node_address) #reg rxnodeadrs = set node address
 
-    set_mode(5) #start out in rx mode
+    #set_mode(5) #start out in rx mode
 
-    write_register(0x40, 0) #DIO0 is "payload ready"
+    #write_register(0x40, 0) #DIO0 is "payload ready"
 
 
 def init_spi():
     bus = 0 #default spi bus
-
+    
     # Open a connection to a specific bus and device (chip select pin)
     spi.open(bus, ce_pin)
 
     # Set SPI speed and mode
-    spi.max_speed_hz = 500000
-    spi.mode = 0
+    spi.max_speed_hz = 4000000
+    #spi.mode = 3
 
 def read_register(addr):
-    
-    #transmit register address
-    tempbuf = addr & 0x7f
-    result = spi.xfer2(tempbuf)
-
-    return result
+    return spi.xfer([addr & 0x7F, 0])[1]
+   
 
 def write_register(addr, value):
-    
-    #transmit register address
-    tempbuf = addr | 0x80
-    spi.xfer2(tempbuf)
-    #transmit value
-    spi.xfer2(value) 
+    spi.xfer([addr | 0x80, value])
+
+def handle_interrupt():
+    #get the interrupt cause
+    irqflags2 = read_register(0x3f)
+
+    if mode == 5 and (irqflags2 & 0x04): #if mode = receive and payload is ready
+        #a message has been received
+        set_mode(1) #set mode to standby
+        #save it in our buffer
+        read_fifo()
+
+def read_fifo():
+    tempbuf = 0x00 & 0x7f #read from reg fifo
+    payloadLength = spi.xfer2(tempbuf)
     
 
 def set_mode(newMode):
@@ -127,6 +135,9 @@ def set_mode(newMode):
 
 
     
+def destroy():
+    spi.close()
+    GPIO.cleanup()  
 
 
 
@@ -138,6 +149,3 @@ def set_mode(newMode):
 
 
 
-
-
-#GPIO.cleanup()
