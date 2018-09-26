@@ -1,22 +1,26 @@
 #test_reg.py
 
 import sx1238
+from sx1238_registers import *
+import datetime
+import time
 
-sx1238.init()
+test = sx1238.SX1238(7)
+print "class initialized"
 
-regval = sx1238.read_register(0x01) #read regopmode
+print "setting opmode to standby"
+test.write_register(0x01, 1)
 
-print("reg opmode = ", regval)
+print "opmode is..."
+print test.read_register(0x01)
 
-regval = sx1238.read_register(0x33) #read regnodeadrs
+print "reading all registers"
+results = test.read_all_regs()
+for result in results:
+    print result
 
-print("reg node address = ", regval)
+print "Checking temperature"
+print test.read_temperature(0)
 
-print("writing new node address = 10")
-sx1238.write_register(0x33, 10) #write register regnodeadrs
-
-regval = sx1238.read_register(0x33) #read regnodeadrs
-
-print("reg node address = ", regval)
-
-sx1238.destroy()
+print "shutting down"
+test.shutdown()

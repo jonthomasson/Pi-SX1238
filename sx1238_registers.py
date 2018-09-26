@@ -1,0 +1,204 @@
+
+#sx1238 internal register addresses
+REG_FIFO = 0x00
+REG_OPMODE = 0x01
+REG_BITRATEMSB = 0x02
+REG_BITRATELSB = 0x03
+REG_FDEVMSB = 0x04
+REG_FDEVLSB = 0x05
+REG_FRFMSB = 0x06
+REG_FRFMID = 0x07
+REG_FRFLSB = 0x08
+REG_PACONFIG = 0x09
+REG_PARAMP = 0x0A
+REG_OCP = 0x0B
+REG_LNA = 0x0C
+REG_RXCONFIG = 0x0D
+REG_RSSICONFIG = 0x0E
+REG_RSSICOLLISION = 0x0F
+REG_RSSITHRESH = 0x10
+REG_RSSIVALUE = 0x11
+REG_RXBW = 0x12
+REG_AFCBW = 0x13
+REG_OOKPEAK = 0x14
+REG_OOKFIX = 0x15
+REG_OOKAVG = 0x16
+REG_AFCFEI = 0x1A
+REG_AFCMSB = 0x1B
+REG_AFCLSB = 0x1C
+REG_FEIMSB = 0x1D
+REG_FEILSB = 0x1E
+REG_PREAMBLEDETECT = 0x1F
+REG_RXTIMEOUT1 = 0x20
+REG_RXTIMEOUT2 = 0x21
+REG_RXTIMEOUT3 = 0x22
+REG_RXDELAY = 0x23
+REG_OSC = 0x24
+REG_PREAMBLEMSB = 0x25
+REG_PREAMBLELSB = 0x26
+REG_SYNCCONFIG = 0x27
+REG_SYNCVALUE1 = 0x28
+REG_SYNCVALUE2 = 0x29
+REG_SYNCVALUE3 = 0x2A
+REG_SYNCVALUE4 = 0x2B
+REG_SYNCVALUE5 = 0x2C
+REG_SYNCVALUE6 = 0x2D
+REG_SYNCVALUE7 = 0x2E
+REG_SYNCVALUE8 = 0x2F
+REG_PACKETCONFIG1 = 0x30
+REG_PACKETCONFIG2 = 0x31
+REG_PAYLOADLENGTH = 0x32
+REG_NODEADRS = 0x33
+REG_BROADCASTADRS = 0x34
+REG_FIFOTHRESH = 0x35
+REG_SEQCONFIG1 = 0x36
+REG_SEQCONFIG2 = 0x37
+REG_TIMERRESOL = 0x38
+REG_TIMER1COEF = 0x39
+REG_TIMER2COEF = 0x3A
+REG_IMAGECAL = 0x3B
+REG_TEMP = 0x3C
+REG_LOWBAT = 0x3D
+REG_IRQFLAGS1 = 0x3E
+REG_IRQFLAGS2 = 0x3F
+REG_DIOMAPPING1 = 0x40
+REG_DIOMAPPING2 = 0x41
+REG_VERSION = 0x42
+REG_AGCREF = 0x43
+REG_AGCTHRESH1 = 0x44
+REG_AGCTHRESH2 = 0x45
+REG_AGCTHRESH3 = 0x46
+REG_TCXO = 0x58
+REG_PADAC = 0x5A
+REG_PLL = 0x5C
+REG_PLLLOWPN = 0x5E
+REG_FORMERTEMP = 0x6C
+REG_BITRATEFRAC = 0x70
+
+#RegIrqFlags1
+RF_IRQFLAGS1_MODEREADY = 0x80
+RF_IRQFLAGS1_RXREADY = 0x40
+RF_IRQFLAGS1_TXREADY = 0x20
+RF_IRQFLAGS1_PLLLOCK = 0x10
+RF_IRQFLAGS1_RSSI = 0x08
+RF_IRQFLAGS1_TIMEOUT = 0x04
+RF_IRQFLAGS1_PREAMBLEDETECT = 0x02
+RF_IRQFLAGS1_SYNCADDRESSMATCH = 0x01
+
+#RegIrqFlags2
+RF_IRQFLAGS2_FIFOFULL = 0x80
+RF_IRQFLAGS2_FIFOEMPTY = 0x40
+RF_IRQFLAGS2_FIFOLEVEL = 0x20
+RF_IRQFLAGS2_FIFOOVERRUN = 0x10
+RF_IRQFLAGS2_PACKETSENT = 0x08
+RF_IRQFLAGS2_PAYLOADREADY = 0x04
+RF_IRQFLAGS2_CRCOK = 0x02
+RF_IRQFLAGS2_LOWBAT = 0x01
+
+#RegDioMapping1
+RF_DIOMAPPING1_DIO0_00 = 0x00  #Default
+RF_DIOMAPPING1_DIO0_01 = 0x40
+RF_DIOMAPPING1_DIO0_10 = 0x80
+RF_DIOMAPPING1_DIO0_11 = 0xC0
+
+RF_DIOMAPPING1_DIO1_00 = 0x00  #Default
+RF_DIOMAPPING1_DIO1_01 = 0x10
+RF_DIOMAPPING1_DIO1_10 = 0x20
+RF_DIOMAPPING1_DIO1_11 = 0x30
+
+RF_DIOMAPPING1_DIO2_00 = 0x00  #Default
+RF_DIOMAPPING1_DIO2_01 =  0x04
+RF_DIOMAPPING1_DIO2_10 = 0x08
+RF_DIOMAPPING1_DIO2_11 = 0x0C
+
+RF_DIOMAPPING1_DIO3_00 = 0x00  #Default
+RF_DIOMAPPING1_DIO3_01 = 0x01
+RF_DIOMAPPING1_DIO3_10 = 0x02
+RF_DIOMAPPING1_DIO3_11 = 0x03
+
+#FIFOTHRESH
+FIFOTHRESH_TXSTARTCONDITION_FIFOEMPTY = 0x80 #FifoEmpty goes low(i.e. at least one byte in the FIFO)
+FIFOTHRESH_TXSTARTCONDITION_FIFOlevel = 0x00 #FifoLevel (i.e. the number of bytes in the FIFO exceeds FifoThreshold
+FIFOTHRESH_FIFOTHRESHOLD = 0x0F #Used to trigger FifoLevel interrupt, when: nbr of bytes in FIFO >= FifoThreshold + 1
+
+#PACKETCONFIG1
+PACKETCONFIG1_PACKETFORMAT_VARIABLE = 0x80 #packet format used: variable length
+PACKETCONFIG1_DCFREE_MANCHESTER = 0x20
+PACKETCONFIG1_DCFREE_WHITENING = 0x40
+PACKETCONFIG1_CRC_ON = 0x10
+PACKETCONFIG1_CRCAUTOCLEAROFF_DONOTCLEARFIFO = 0x08 #Defines the behavior of the packet handler when crc check fails. Do Not clear FIFO. PayloadReady interrupt issued.
+PACKETCONFIG1_ADDRESSFILTERING_NODE = 0x02 #Defines address based filtering in Rx: Address field must match NodeAddress
+PACKETCONFIG1_ADDRESSFILTERING_NODEORBROAD = 0x04 #Defines address based filtering in Rx: Address field must match NodeAddress or BroadcastAddress
+PACKETCONFIG1_CRCWHITENINGTYPE_IBM = 0x01 #Selects the CRC and whitening algorithms: IBM CRC with alternate whitening
+
+#PACKETCONFIG2
+PACKETCONFIG2_DATAMODE_PACKET = 0x40 #Data processing mode: Packet
+PACKETCONFIG2_IOHOME_ON = 0x20 #Enables the ioHomeControl compatibility mode
+PACKETCONFIG2_BEACON_ON = 0x08 #Enables the Beacon mode in Fixed packet format
+
+#SYNCCONFIG
+SYNCCONFIG_AUTORESTARTRXMODE_ONWITHOUTPLL = 0x40 #Controls the automatic restart of the receiver after the reception of a valid packet. On, without waiting for PLL to re-lock.
+SYNCCONFIG_AUTORESTARTRXMODE_ONWITHPLL = 0x80 #Controls the automatic restart of the receiver after the reception of a valid packet. On, wait for PLL to lock (freq changed).
+SYNCCONFIG_PREAMBLEPOLARITY_55 = 0x20 #Sets the polarity of the Preamble
+SYNCCONFIG_SYNC_ON = 0x10 #Enables the Sync word generation and detection.
+SYNCCONFIG_FIFOFILLCONDITION_FILLCONDITION = 0X08 #FIFO filling condition: as long as FifoFillCondition is set.
+SYNCCONFIG_SYNCSIZE_3 = 0X03 #Size of the Sync word
+SYNCCONFIG_SYNCSIZE_2 = 0X02 #Size of the Sync word
+SYNCCONFIG_SYNCSIZE_1 = 0X01 #Size of the Sync word
+
+#PACONFIG
+PACONFIG_OUTPUTPOWER_0 = 0x00 #Pout = 20 + OutputPower [dBm] , on ANT pin
+PACONFIG_OUTPUTPOWER_1 = 0x01 #Pout = 20 + OutputPower [dBm] , on ANT pin
+PACONFIG_OUTPUTPOWER_2 = 0x02 #Pout = 20 + OutputPower [dBm] , on ANT pin
+PACONFIG_OUTPUTPOWER_3 = 0x03 #Pout = 20 + OutputPower [dBm] , on ANT pin
+PACONFIG_OUTPUTPOWER_4 = 0x04 #Pout = 20 + OutputPower [dBm] , on ANT pin
+PACONFIG_OUTPUTPOWER_5 = 0x05 #Pout = 20 + OutputPower [dBm] , on ANT pin
+PACONFIG_OUTPUTPOWER_6 = 0x06 #Pout = 20 + OutputPower [dBm] , on ANT pin
+PACONFIG_OUTPUTPOWER_7 = 0x07 #Pout = 20 + OutputPower [dBm] , on ANT pin
+PACONFIG_OUTPUTPOWER_8 = 0x08 #Pout = 20 + OutputPower [dBm] , on ANT pin
+PACONFIG_OUTPUTPOWER_9 = 0x09 #Pout = 20 + OutputPower [dBm] , on ANT pin
+PACONFIG_OUTPUTPOWER_10 = 0x0a #Pout = 20 + OutputPower [dBm] , on ANT pin
+PACONFIG_OUTPUTPOWER_11 = 0x0b #Pout = 20 + OutputPower [dBm] , on ANT pin
+PACONFIG_OUTPUTPOWER_12 = 0x0c #Pout = 20 + OutputPower [dBm] , on ANT pin
+PACONFIG_OUTPUTPOWER_13 = 0x0d #Pout = 20 + OutputPower [dBm] , on ANT pin
+PACONFIG_OUTPUTPOWER_14 = 0x0e #Pout = 20 + OutputPower [dBm] , on ANT pin
+PACONFIG_OUTPUTPOWER_15 = 0x0f #Pout = 20 + OutputPower [dBm] , on ANT pin
+
+#preamble
+PREAMBLEMSB = 0X00
+PREAMBLELSB = 0X03
+
+#frf
+FRFMSB = 0xe4 #915MHz
+FRFMID = 0xc0 #915MHz
+FRFLSB = 0x00 #915MHz
+
+#sync value
+SYNCVALUE1 = 0x5A
+SYNCVALUE2 = 0x5A
+
+#bitrate
+BITRATEMSB = 0x1a #default bit rate 4.8kb/s
+BITRATELSB = 0x0b #default bit rate 4.8kb/s
+
+#fdev
+FDEVMSB = 0x00 #default 5 kHz
+FDEVLSB = 0x52 #default 5 kHz
+
+#rxbw
+RXBW = 0x05
+
+CSMA_LIMIT = -90 # upper RX signal sensitivity threshold in dBm for carrier sense access
+COURSE_TEMP_COEF = -90 # puts the temperature reading in the ballpark, user can fine tune the returned value
+SX1238_BROADCAST_ADDR = 255
+SX1238_CSMA_LIMIT_MS = 1000
+SX1238_CSMA_LIMIT_S = 1
+
+
+#transceiver modes
+SX1238_MODE_SLEEP = 0 #none
+SX1238_MODE_STANDBY = 1 # Top regulator and crystal oscillator
+SX1238_MODE_SYNTH_TX = 2 # Frequency synthesizer at Tx frequency (Frf)
+SX1238_MODE_TX = 3 # Frequency synthesizer and transmitter
+SX1238_MODE_SYNTH_RX = 4 # Frequency synthesizer at frequency for reception (Frf-IF)
+SX1238_MODE_RX = 5 # Frequency synthesizer and receiver
