@@ -15,6 +15,7 @@ class SX1238(object):
         self.int_pin = int_pin
         self.reset_pin = reset_pin
         self.spi_bus = spi_bus
+        self.int_lock = False
         self.spi_device = spi_device
         self.mode = ""
         self.promiscuous_mode = False
@@ -214,16 +215,16 @@ class SX1238(object):
         self.set_mode(SX1238_MODE_RX)
 
     def interrupt_handler(self, pin):
-        self.intLock = True
+        self.int_lock = True
         self.data_sent = True
-        if self.mode == SX1238_MODE_RX and self.readReg(REG_IRQFLAGS2) & RF_IRQFLAGS2_PAYLOADREADY:
+        if self.mode == SX1238_MODE_RX and self.read_register(REG_IRQFLAGS2) & RF_IRQFLAGS2_PAYLOADREADY:
             self.set_mode(SX1238_MODE_STANDBY)
             self.payload_length, self.target_address, self.sender_address, CTLbyte = self.spi.xfer2([REG_FIFO & 0x7f,0,0,0,0])[1:]
             if self.payload_length > 66:
                 self.payload_length = 66
-            if not (self.promiscuous_mode or self.target_address == self.address or self.target_address == SX1238_BROADCAST_ADDR):
+            if not (self.promiscuous_mode or self.target_address == self.node_address or self.target_address == SX1238_BROADCAST_ADDR):
                 self.payload_length = 0
-                self.intLock = False
+                self.int_lock = False
                 return
             self.data_len = self.payload_length - 3
             self.ack_received = CTLbyte & 0x80
@@ -232,11 +233,11 @@ class SX1238(object):
             self.data = self.spi.xfer2([REG_FIFO & 0x7f] + [0 for i in range(0, self.data_len)])[1:]
 
             self.rssi = self.read_rssi()
-        self.intLock = False
+        self.int_lock = False
 
     def receive_begin(self):
 
-        while self.intLock:
+        while self.int_lock:
             time.sleep(.1)
         self.data_len = 0
         self.sender_address = 0
@@ -249,7 +250,7 @@ class SX1238(object):
             # avoid RX deadlocks
             #self.write_register(REG_PACKETCONFIG2, (self.read_register(REG_PACKETCONFIG2) & 0xFB) | RF_PACKET2_RXRESTART)
         #set DIO0 to "PAYLOADREADY" in receive mode
-        self.write_register(REG_DIOMAPPING1, RF_DIOMAPPING1_DIO0_01)
+        self.write_register(REG_DIOMAPPING1, RF_DIOMAPPING1_DIO0_00)
         self.set_mode(SX1238_MODE_RX)
 
     def receive_done(self):

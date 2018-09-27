@@ -5,7 +5,7 @@ from sx1238_registers import *
 import datetime
 import time
 
-test = sx1238.SX1238(7)
+test = sx1238.SX1238(20)
 print "class initialized"
 
 print "setting opmode to standby"
@@ -21,6 +21,14 @@ for result in results:
 
 print "Checking temperature"
 print test.read_temperature(0)
+
+print "recieving"
+while True:
+    test.receive_begin()
+    while not test.receive_done():
+        time.sleep(.1)
+    print "%s from %s RSSI:%s" % ("".join([chr(letter) for letter in test.data]), test.sender_address, test.rssi)
+ 
 
 print "shutting down"
 test.shutdown()
